@@ -1,0 +1,9 @@
+out/
+out_public/
+*.obj
+*.exp
+*.lib
+*.dll
+*.exe
+*.log
+*.db
