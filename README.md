@@ -49,6 +49,17 @@ build_public.cmd   -> out_public\dinput8.dll   (the released version)
 build.cmd          -> out\dinput8.dll          (developer build, includes an experimental companion driver)
 ```
 
+### Build on Linux
+
+Needs Wine, Python 3, `git`, `msitools`, `unzip` and `binutils`. The setup downloads MSVC 2022 (x86) and the
+Windows SDK through [msvc-wine](https://github.com/mstorsjo/msvc-wine) into `$MSVC_WINE_DIR` (default `~/opt/msvc`);
+running it accepts Microsoft's licence terms.
+
+```
+tools/setup-msvc-wine.sh
+./build.sh                 -> out/dinput8.dll   (--public -> out_public/dinput8.dll)
+```
+
 Copy `dinput8.dll` and `KotorPlus.ini` next to `swkotor.exe`. `KotorPlus.log` lists every applied patch.
 
 ## Credits
