@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# read prints the exact bytes; addresses in hex with or without 0x; zero length; mapping edges.
+. "$(dirname "$0")/_kmem_lib.sh"
+run K --image "$IMG" read 0x401000 8; expect_rc 0 "read 0x401000 8"
+[ "$(norm "$out")" = "123456789abcdef0" ] || fail "read printed '$out'"
+run K --image "$IMG" read 401000 8;   expect_rc 0 "read 401000 8"
+[ "$(norm "$out")" = "123456789abcdef0" ] || fail "no-0x form printed '$out'"
+KMEM_PROC="$PROC" run K read 0x401004 4; expect_rc 0 "read through the process"
+[ "$(norm "$out")" = "9abcdef0" ] || fail "process read printed '$out'"
+run K --image "$IMG" read 0x401000 0; expect_rc 0 "zero length"
+[ -z "$(norm "$out")" ] || fail "zero length printed '$out'"
+run K --image "$IMG" read 0x5F1FFF 1; expect_rc 0 "last mapped byte"
+[ "$(norm "$out")" = "00" ] || fail "last byte printed '$out'"
+run K --image "$IMG" read 0x5F2000 1; expect_rc 2 "one past the end"
+run K --image "$IMG" read 0x5F1FFF 2; expect_rc 2 "crossing the end"
+run K --image "$IMG" read 0x3FFFFF 1; expect_rc 2 "below the base"
+run K --image "$IMG" read zz 4;       expect_rc 2 "not hex"
+run K --image "$IMG" read 0x401000 -1; expect_rc 2 "negative length"
+run K --image "$IMG" read 0x401000;   expect_rc 2 "missing length"
+pass
